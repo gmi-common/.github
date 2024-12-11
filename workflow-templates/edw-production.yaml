@@ -1,0 +1,59 @@
+# Workflow name
+name: Production EDW
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - edw/ddl_scripts/prd/**
+      - edw/bigquery_table_security_prd.json
+    branches:
+      - $default-branch
+env:
+  ####### CONSTANT VALUES #######
+  VAULT_URL: https://vault.genmills.com:8200
+  ####### VALUES CHANGE PER ENVIRONMENT #######
+  PROJECT_ID: edw-prd-e567f9
+  ROLESET_PATH: gcp-edw-prd/key/build-edw-prd-<your-project>
+  TABLE_LEVEL_SECURITY_FILE_PATH: ./edw/bigquery_table_security_prd.json
+  JWT_ROLE_PROD: gmi-common-<your-project>-dlf-gcp-build-prd
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy-edw-production:
+    runs-on: gcp
+    environment: production
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Fetch Vault Token
+      uses: hashicorp/vault-action@v2
+      with:
+        url: ${{ env.VAULT_URL }}
+        caCertificate: ${{ secrets.VAULT_CERT }}
+        method: jwt
+        path: oidc-github
+        role: ${{ env.JWT_ROLE_PROD }}
+        jwtGithubAudience: https://github.com/gmi-common
+        exportToken: true
+        secrets: |
+          secret/data/cloverleaf/github/prod/github-database-portal-client-id value | DATABASE_PORTAL_CLIENT_ID;
+          secret/data/cloverleaf/github/prod/github-database-portal-client-secret value | DATABASE_PORTAL_CLIENT_SECRET;
+    - name: Deploy edw production
+      uses: gmi-actions/bigquery-ddl-deploy-action@v1
+      with:
+        google_project_id: ${{ env.PROJECT_ID }}
+        ddl_folder_path: |
+          ./ddl_scripts/prd
+        bigdata_mongo_user: ${{ secrets.DATADEPLOY_MONGO_USER }}
+        bigdata_mongo_password: ${{ secrets.DATADEPLOY_MONGO_PASSWORD }}
+        vault_token: ${{ env.VAULT_TOKEN }}
+        roleset_path: ${{ env.ROLESET_PATH }}
+        debug: True
+    - name: EDW table security
+      uses: gmi-actions/gcp-bq-table-security-action@v2
+      with:
+        table_security_file: ${{ env.TABLE_LEVEL_SECURITY_FILE_PATH}}
+        azure_client_id: ${{ env.DATABASE_PORTAL_CLIENT_ID }}
+        azure_client_secret: ${{ env.DATABASE_PORTAL_CLIENT_SECRET }}
+        azure_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
