@@ -1,0 +1,8 @@
+{
+    "name": "edw-qa",
+    "description": "Deploys edw tables and security from the edw folder.",
+    "categories": [
+        "deployment"
+    ],
+    "filePatterns": []
+}

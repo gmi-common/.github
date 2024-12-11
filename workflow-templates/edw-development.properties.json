@@ -1,0 +1,8 @@
+{
+    "name": "edw-development",
+    "description": "Deploys edw tables and security from the edw folder.",
+    "categories": [
+        "deployment"
+    ],
+    "filePatterns": []
+}
