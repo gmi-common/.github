@@ -14,7 +14,7 @@ env:
   ####### VALUES CHANGE PER ENVIRONMENT #######
   PROJECT_ID: edw-prd-e567f9
   ROLESET_PATH: gcp-edw-prd/key/build-edw-prd-<your-project>
-  TABLE_LEVEL_SECURITY_FILE_PATH: ./edw/bigquery_table_security_prd.json
+  TABLE_LEVEL_SECURITY_FILE_PATH: ./<your project>/bigquery_table_security_prd.json
   JWT_ROLE_PROD: gmi-common-<your-project>-dlf-gcp-build-prd
 permissions:
   id-token: write
@@ -44,7 +44,7 @@ jobs:
       with:
         google_project_id: ${{ env.PROJECT_ID }}
         ddl_folder_path: |
-          ./ddl_scripts/prd
+          ./<your project>/ddl_scripts/prd
         bigdata_mongo_user: ${{ secrets.DATADEPLOY_MONGO_USER }}
         bigdata_mongo_password: ${{ secrets.DATADEPLOY_MONGO_PASSWORD }}
         vault_token: ${{ env.VAULT_TOKEN }}
