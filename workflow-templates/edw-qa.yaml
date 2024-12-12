@@ -13,7 +13,7 @@ env:
   ####### VALUES CHANGE PER ENVIRONMENT #######
   PROJECT_ID: edw-qa-c89f9d
   ROLESET_PATH: gcp-edw-qa/key/build-edw-qa-<your project>
-  TABLE_LEVEL_SECURITY_FILE_PATH: ./edw/bigquery_table_security_qa.json
+  TABLE_LEVEL_SECURITY_FILE_PATH: ./<your project>/bigquery_table_security_qa.json
   JWT_ROLE_QA: gmi-common-<your project>-dlf-gcp-build-qa
 permissions:
   id-token: write
@@ -43,7 +43,7 @@ jobs:
       with:
         google_project_id: ${{ env.PROJECT_ID }}
         ddl_folder_path: |
-          ./edw/ddl_scripts/qa
+          ./<your project>/ddl_scripts/qa
         bigdata_mongo_user: ${{ secrets.DATADEPLOY_MONGO_USER }}
         bigdata_mongo_password: ${{ secrets.DATADEPLOY_MONGO_PASSWORD }}
         vault_token: ${{ env.VAULT_TOKEN }}
