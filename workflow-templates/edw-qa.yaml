@@ -43,7 +43,7 @@ jobs:
       with:
         google_project_id: ${{ env.PROJECT_ID }}
         ddl_folder_path: |
-          ./ddl_scripts/qa
+          ./edw/ddl_scripts/qa
         bigdata_mongo_user: ${{ secrets.DATADEPLOY_MONGO_USER }}
         bigdata_mongo_password: ${{ secrets.DATADEPLOY_MONGO_PASSWORD }}
         vault_token: ${{ env.VAULT_TOKEN }}
