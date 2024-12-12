@@ -37,4 +37,4 @@ jobs:
           build_number: ${{ needs.set_env.outputs.build_number }}
 
   ### Deploy to the target platform
-  ### Leveage other templates provided in this repository to perform deployment steps
+  ### Leverage other templates provided in this repository to perform deployment steps
